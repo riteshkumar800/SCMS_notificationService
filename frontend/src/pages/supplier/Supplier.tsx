@@ -910,6 +910,7 @@ import SupplierTable from "../../components/SupplierTable";
 import AddSupplierModal from "../../components/AddSupplierModal";
 
 import { addActivity } from "../../services/activityService";
+import { sendNotification } from "../../services/notificationService";
 // import { getSuppliers } from "../../services/api";
 // import {
 //   getSuppliers,
@@ -996,6 +997,11 @@ function SupplierPage() {
       addActivity(
         `Supplier Added: ${savedSupplier.name}`
       );
+      await sendNotification({
+  senderId: 1,
+  receiverId: 1,
+  message: `Supplier Created : ${savedSupplier.name}`,
+});
 
       setShowModal(false);
 
