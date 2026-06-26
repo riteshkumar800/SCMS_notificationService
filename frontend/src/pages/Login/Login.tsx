@@ -569,7 +569,250 @@
 // }
 
 // export default Login;
-import { useState } from "react";
+// import { useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { login } from "../../services/authService";
+
+// function Login() {
+
+//   const navigate = useNavigate();
+
+//   const [email, setEmail] =
+//     useState("");
+
+//   const [password, setPassword] =
+//     useState("");
+
+//   const generateCaptcha = () => {
+
+//     return Math.random()
+//       .toString(36)
+//       .substring(2, 7)
+//       .toUpperCase();
+
+//   };
+
+//   const [captcha, setCaptcha] =
+//     useState(generateCaptcha());
+
+//   const [captchaInput, setCaptchaInput] =
+//     useState("");
+
+//   const handleLogin = () => {
+
+//     if (
+//       captchaInput !== captcha
+//     ) {
+
+//       alert(
+//         "Invalid Captcha"
+//       );
+
+//       setCaptcha(
+//         generateCaptcha()
+//       );
+
+//       setCaptchaInput("");
+
+//       return;
+
+//     }
+
+//     const success =
+//       login(
+//         email,
+//         password
+//       );
+
+//     if (success) {
+
+//       console.log(
+//         "LOGIN SUCCESS"
+//       );
+
+//       navigate(
+//         "/dashboard"
+//       );
+
+//     } else {
+
+//       alert(
+//         "Invalid Credentials"
+//       );
+
+//       setCaptcha(
+//         generateCaptcha()
+//       );
+
+//       setCaptchaInput("");
+
+//     }
+
+//   };
+
+//   return (
+
+//     <div className="min-h-screen bg-[#020617] flex items-center justify-center px-4">
+
+//       <div className="w-full max-w-4xl bg-[#0f172a] rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2">
+
+//         {/* LEFT SIDE */}
+
+//         <div className="p-10 flex flex-col justify-center">
+
+//           <div className="mb-8">
+
+//             <h1 className="text-4xl font-bold text-white mb-2">
+
+//               SCMS Login
+
+//             </h1>
+
+//             <p className="text-gray-400">
+
+//               Supply Chain Management System
+
+//             </p>
+
+//           </div>
+
+//           <input
+//             type="email"
+//             placeholder="Email"
+//             value={email}
+//             onChange={(e) =>
+//               setEmail(
+//                 e.target.value
+//               )
+//             }
+//             className="w-full mb-4 p-4 rounded-lg bg-black border border-gray-700 text-white"
+//           />
+
+//           <input
+//             type="password"
+//             placeholder="Password"
+//             value={password}
+//             onChange={(e) =>
+//               setPassword(
+//                 e.target.value
+//               )
+//             }
+//             className="w-full mb-4 p-4 rounded-lg bg-black border border-gray-700 text-white"
+//           />
+
+//           {/* CAPTCHA */}
+
+//           <div className="mb-5">
+
+//             <div className="flex gap-3">
+
+//               <div
+//                 className="
+//                 flex-1
+//                 bg-black
+//                 border
+//                 border-gray-700
+//                 rounded-lg
+//                 p-3
+//                 text-center
+//                 text-2xl
+//                 font-bold
+//                 tracking-widest
+//                 text-cyan-400
+//                 select-none
+//                 "
+//               >
+//                 {captcha}
+//               </div>
+
+//               <button
+//                 type="button"
+//                 onClick={() =>
+//                   setCaptcha(
+//                     generateCaptcha()
+//                   )
+//                 }
+//                 className="
+//                 bg-gray-800
+//                 px-4
+//                 rounded-lg
+//                 border
+//                 border-gray-700
+//                 hover:bg-gray-700
+//                 "
+//               >
+//                 🔄
+//               </button>
+
+//             </div>
+
+//             <input
+//               type="text"
+//               placeholder="Enter Captcha"
+//               value={captchaInput}
+//               onChange={(e) =>
+//                 setCaptchaInput(
+//                   e.target.value
+//                 )
+//               }
+//               className="
+//               w-full
+//               mt-3
+//               p-4
+//               rounded-lg
+//               bg-black
+//               border
+//               border-gray-700
+//               text-white
+//               "
+//             />
+
+//           </div>
+
+//           <button
+//             onClick={handleLogin}
+//             className="w-full bg-green-600 hover:bg-green-700 p-4 rounded-lg font-semibold"
+//           >
+//             Sign In
+//           </button>
+
+//         </div>
+
+//         {/* RIGHT SIDE */}
+
+//         <div className="bg-gradient-to-br from-slate-800 to-slate-900 flex flex-col justify-center items-center p-10 border-l border-gray-800">
+
+//           <div className="text-8xl mb-6">
+//             ⚙️
+//           </div>
+
+//           <h2 className="text-3xl font-bold text-white mb-3">
+//             SCMS
+//           </h2>
+
+//           <p className="text-center text-gray-400 leading-relaxed">
+
+//             Manage Suppliers,
+//             Materials,
+//             Stores,
+//             Manufacturers and
+//             Employees from a
+//             single dashboard.
+
+//           </p>
+
+//         </div>
+
+//       </div>
+
+//     </div>
+
+//   );
+
+// }
+
+// export default Login;
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/authService";
 
@@ -577,78 +820,93 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const [email, setEmail] =
+  const [userId, setUserId] =
     useState("");
 
   const [password, setPassword] =
     useState("");
 
-  const generateCaptcha = () => {
-
-    return Math.random()
-      .toString(36)
-      .substring(2, 7)
-      .toUpperCase();
-
-  };
-
   const [captcha, setCaptcha] =
-    useState(generateCaptcha());
+    useState("");
 
   const [captchaInput, setCaptchaInput] =
     useState("");
 
-  const handleLogin = () => {
+  const loadCaptcha =
+    async () => {
 
-    if (
-      captchaInput !== captcha
-    ) {
+      try {
 
-      alert(
-        "Invalid Captcha"
-      );
+        const response =
+          await fetch(
+            "http://localhost:8081/auth/captcha"
+          );
 
-      setCaptcha(
-        generateCaptcha()
-      );
+        const data =
+          await response.json();
 
-      setCaptchaInput("");
+        setCaptcha(
+          data.captcha
+        );
 
-      return;
+      } catch (error) {
 
-    }
+        console.error(error);
 
-    const success =
-      login(
-        email,
-        password
-      );
+      }
 
-    if (success) {
+    };
 
-      console.log(
-        "LOGIN SUCCESS"
-      );
+  useEffect(() => {
 
-      navigate(
-        "/dashboard"
-      );
+    loadCaptcha();
 
-    } else {
+  }, []);
 
-      alert(
-        "Invalid Credentials"
-      );
+  const handleLogin =
+    async () => {
 
-      setCaptcha(
-        generateCaptcha()
-      );
+      if (
+        captchaInput !== captcha
+      ) {
 
-      setCaptchaInput("");
+        alert(
+          "Invalid Captcha"
+        );
 
-    }
+        loadCaptcha();
 
-  };
+        setCaptchaInput("");
+
+        return;
+
+      }
+
+      const success =
+        await login(
+          userId,
+          password
+        );
+
+      if (success) {
+
+        navigate(
+          "/dashboard"
+        );
+
+      } else {
+
+        alert(
+          "Invalid Credentials"
+        );
+
+        loadCaptcha();
+
+        setCaptchaInput("");
+
+      }
+
+    };
 
   return (
 
@@ -656,7 +914,7 @@ function Login() {
 
       <div className="w-full max-w-4xl bg-[#0f172a] rounded-3xl shadow-2xl overflow-hidden grid md:grid-cols-2">
 
-        {/* LEFT SIDE */}
+        {/* LEFT */}
 
         <div className="p-10 flex flex-col justify-center">
 
@@ -677,11 +935,11 @@ function Login() {
           </div>
 
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
+            type="text"
+            placeholder="User ID"
+            value={userId}
             onChange={(e) =>
-              setEmail(
+              setUserId(
                 e.target.value
               )
             }
@@ -727,11 +985,7 @@ function Login() {
 
               <button
                 type="button"
-                onClick={() =>
-                  setCaptcha(
-                    generateCaptcha()
-                  )
-                }
+                onClick={loadCaptcha}
                 className="
                 bg-gray-800
                 px-4
@@ -771,14 +1025,38 @@ function Login() {
 
           <button
             onClick={handleLogin}
-            className="w-full bg-green-600 hover:bg-green-700 p-4 rounded-lg font-semibold"
+            className="
+            w-full
+            bg-green-600
+            hover:bg-green-700
+            p-4
+            rounded-lg
+            font-semibold
+            "
           >
             Sign In
           </button>
 
+          <button
+            onClick={() =>
+              navigate("/register")
+            }
+            className="
+            w-full
+            mt-3
+            bg-blue-600
+            hover:bg-blue-700
+            p-4
+            rounded-lg
+            font-semibold
+            "
+          >
+            Create User
+          </button>
+
         </div>
 
-        {/* RIGHT SIDE */}
+        {/* RIGHT */}
 
         <div className="bg-gradient-to-br from-slate-800 to-slate-900 flex flex-col justify-center items-center p-10 border-l border-gray-800">
 

@@ -200,6 +200,8 @@ import Store from "../pages/store/Store";
 import Notification from "../pages/notification/Notification";
 
 import ProtectedRoute from "./ProtectedRoute";
+import Register
+from "../pages/register/Register";
 
 function AppRoutes() {
   return (
@@ -228,6 +230,10 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/register"
+  element={<Register />}
+/>
 
         <Route
           path="/material"
