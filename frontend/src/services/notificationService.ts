@@ -312,70 +312,256 @@
 //   });
 
 // }
+// import SockJS from "sockjs-client";
+// import { Client } from "@stomp/stompjs";
+
+// let stompClient: Client | null = null;
+
+// const SOCKET_URL = "http://localhost:8081/ws";
+
+// export interface NotificationMessage {
+//   senderId: number;
+//   receiverId: number;
+//   message: string;
+// }
+
+// export function connectNotification(
+//   userId: number,
+//   onMessage: (message: any) => void
+// ) {
+
+//   if (stompClient?.connected) {
+//     console.log("Already Connected");
+//     return;
+//   }
+
+//   console.log("Creating WebSocket...");
+
+//   const socket = new SockJS(SOCKET_URL);
+
+//   stompClient = new Client({
+
+//     webSocketFactory: () => socket,
+
+//     reconnectDelay: 5000,
+
+//     debug: (msg) => console.log(msg),
+
+//   });
+
+//   stompClient.onConnect = () => {
+
+//     console.log("✅ WebSocket Connected");
+
+//     console.log("Subscribing to:", `/topic/notifications/${userId}`);
+
+//     stompClient?.subscribe(
+
+//       `/topic/notifications/${userId}`,
+
+//       (message) => {
+
+//         console.log("Notification Received:", message.body);
+
+//         onMessage(JSON.parse(message.body));
+
+//       }
+
+//     );
+
+//   };
+
+//   stompClient.onStompError = (frame) => {
+
+//     console.error("STOMP ERROR:", frame);
+
+//   };
+
+//   stompClient.activate();
+
+// }
+
+// export function disconnectNotification() {
+
+//   stompClient?.deactivate();
+
+//   console.log("Disconnected");
+
+// }
+
+// export function sendNotification(
+//   notification: NotificationMessage
+// ) {
+
+//   console.log("Trying to send...");
+
+//   console.log("Connected:", stompClient?.connected);
+
+//   if (!stompClient?.connected) {
+
+//     console.log("❌ WebSocket not connected");
+
+//     return;
+
+//   }
+
+//   console.log("Sending:", notification);
+
+//   stompClient.publish({
+
+//     destination: "/app/sendMessage",
+
+//     body: JSON.stringify(notification),
+
+//   });
+
+// }
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
 let stompClient: Client | null = null;
 
-const SOCKET_URL = "http://localhost:8081/ws";
+const SOCKET_URL =
+  "http://localhost:8081/ws";
 
 export interface NotificationMessage {
+
   senderId: number;
+
   receiverId: number;
+
   message: string;
+
+}
+
+export interface IndentMessage {
+
+  senderId: number;
+
+  senderName: string;
+
+  receiverId: number;
+
+  itemName: string;
+
+  quantity: number;
+
+  priority: string;
+
+  timestamp: string;
+
 }
 
 export function connectNotification(
+
   userId: number,
-  onMessage: (message: any) => void
+
+  onMessage: (message: any) => void,
+
+  onIndent?: (indent: IndentMessage) => void
+
 ) {
 
   if (stompClient?.connected) {
-    console.log("Already Connected");
-    return;
-  }
 
-  console.log("Creating WebSocket...");
-
-  const socket = new SockJS(SOCKET_URL);
-
-  stompClient = new Client({
-
-    webSocketFactory: () => socket,
-
-    reconnectDelay: 5000,
-
-    debug: (msg) => console.log(msg),
-
-  });
-
-  stompClient.onConnect = () => {
-
-    console.log("✅ WebSocket Connected");
-
-    console.log("Subscribing to:", `/topic/notifications/${userId}`);
-
-    stompClient?.subscribe(
-
-      `/topic/notifications/${userId}`,
-
-      (message) => {
-
-        console.log("Notification Received:", message.body);
-
-        onMessage(JSON.parse(message.body));
-
-      }
-
+    console.log(
+      "Already Connected"
     );
 
-  };
+    return;
 
-  stompClient.onStompError = (frame) => {
+  }
 
-    console.error("STOMP ERROR:", frame);
+  const socket =
+    new SockJS(SOCKET_URL);
 
-  };
+  stompClient =
+    new Client({
+
+      webSocketFactory: () =>
+        socket,
+
+      reconnectDelay: 5000,
+
+      debug: (msg) =>
+        console.log(msg),
+
+    });
+
+  stompClient.onConnect =
+    () => {
+
+      console.log(
+        "✅ Connected"
+      );
+
+      // Notification Subscribe
+
+      stompClient?.subscribe(
+
+        `/topic/notifications/${userId}`,
+
+        (message) => {
+
+          onMessage(
+
+            JSON.parse(
+              message.body
+            )
+
+          );
+
+        }
+
+      );
+
+      // Indent Subscribe
+
+      // stompClient?.subscribe(
+
+      //   `/topic/indent/${userId}`,
+
+      //   (message) => {
+
+      //     if (onIndent) {
+
+      //       onIndent(
+
+      //         JSON.parse(
+      //           message.body
+      //         )
+
+      //       );
+
+      //     }
+
+      //   }
+
+      // );
+      stompClient?.subscribe(
+
+  `/topic/indent/${userId}`,
+
+  (message) => {
+
+    console.log(
+      "INDENT RECEIVED",
+      message.body
+    );
+
+    if (onIndent) {
+
+      onIndent(
+        JSON.parse(message.body)
+      );
+
+    }
+
+  }
+
+);
+
+    };
 
   stompClient.activate();
 
@@ -385,33 +571,92 @@ export function disconnectNotification() {
 
   stompClient?.deactivate();
 
-  console.log("Disconnected");
-
 }
 
 export function sendNotification(
+
   notification: NotificationMessage
+
 ) {
-
-  console.log("Trying to send...");
-
-  console.log("Connected:", stompClient?.connected);
 
   if (!stompClient?.connected) {
 
-    console.log("❌ WebSocket not connected");
+    console.log(
+      "Not Connected"
+    );
 
     return;
 
   }
 
-  console.log("Sending:", notification);
+  stompClient.publish({
+
+    destination:
+      "/app/sendMessage",
+
+    body: JSON.stringify(
+      notification
+    ),
+
+  });
+
+}
+
+// export function sendIndent(
+
+//   indent: IndentMessage
+
+// ) {
+
+//   if (!stompClient?.connected) {
+
+//     console.log(
+//       "Not Connected"
+//     );
+
+//     return;
+
+//   }
+
+//   stompClient.publish({
+
+//     destination:
+//       "/app/sendIndent",
+
+//     body: JSON.stringify(
+//       indent
+//     ),
+
+//   });
+
+// }
+export function sendIndent(
+  indent: IndentMessage
+) {
+
+  console.log(
+    "INDENT SENDING:",
+    indent
+  );
+
+  if (!stompClient?.connected) {
+
+    console.log(
+      "Not Connected"
+    );
+
+    return;
+
+  }
 
   stompClient.publish({
 
-    destination: "/app/sendMessage",
+    destination:
+      "/app/sendIndent",
 
-    body: JSON.stringify(notification),
+    body: JSON.stringify(
+      indent
+    ),
 
   });
 

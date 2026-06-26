@@ -183,6 +183,7 @@
 // }
 
 // export default AppRoutes;
+import Indent from "../pages/indent/Indent";
 import {
   BrowserRouter,
   Routes,
@@ -263,6 +264,14 @@ function AppRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/indent"
+  element={
+    <ProtectedRoute>
+      <Indent />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/notifications"
