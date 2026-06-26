@@ -654,6 +654,20 @@ function Indent() {
 
   const currentUser = getCurrentUser();
 
+  const medicines = [
+
+  "Paracetamol 500mg",
+
+  "Amoxicillin 250mg",
+
+  "Cetirizine 10mg",
+
+  "Azithromycin 500mg",
+
+  "Vitamin C 1000mg",
+
+];
+
   const [onlineUsers, setOnlineUsers] =
     useState<OnlineUser[]>([]);
 
@@ -970,22 +984,50 @@ const handleReject = (
 
             <input
 
-              value={itemName}
+  list="medicine-list"
 
-              onChange={(e) =>
+  value={itemName}
 
-                setItemName(
-                  e.target.value
-                )
+  onChange={(e) =>
 
-              }
+    setItemName(
+      e.target.value
+    )
 
-              placeholder="Select Item"
+  }
 
-              className="bg-black border border-gray-700 rounded p-3"
+  placeholder="Select Or Type Medicine"
 
-            />
+  className="
+    bg-black
+    border
+    border-gray-700
+    rounded
+    p-3
+  "
 
+/>
+
+<datalist id="medicine-list">
+
+  {
+
+    medicines.map(
+
+      (medicine) => (
+
+        <option
+          key={medicine}
+          value={medicine}
+        />
+
+      )
+
+    )
+
+  }
+
+</datalist>
             <input
 
               value={quantity}

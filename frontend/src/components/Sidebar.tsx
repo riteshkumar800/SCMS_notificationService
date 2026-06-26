@@ -709,6 +709,18 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 
+// import {
+//   LayoutDashboard,
+//   Factory,
+//   Truck,
+//   Package,
+//   Users,
+//   Warehouse,
+//   ChevronDown,
+//   ChevronRight,
+//   Folder,
+//   Bell,
+// } from "lucide-react";
 import {
   LayoutDashboard,
   Factory,
@@ -720,6 +732,7 @@ import {
   ChevronRight,
   Folder,
   Bell,
+  FileText,
 } from "lucide-react";
 
 function Sidebar() {
@@ -841,7 +854,7 @@ function Sidebar() {
 
           {/* Planning */}
 
-          <button
+          {/* <button
             className="
             flex
             items-center
@@ -855,7 +868,20 @@ function Sidebar() {
           >
             <Folder size={20} />
             Planning
-          </button>
+          </button> */}
+          {/* Planning */}
+
+<Link
+  to="/indent"
+  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+    location.pathname === "/indent"
+      ? "bg-green-600 text-white"
+      : "hover:bg-gray-800 text-gray-300"
+  }`}
+>
+  <FileText size={20} />
+  Create Indent
+</Link>
 
           {/* Admin */}
 
