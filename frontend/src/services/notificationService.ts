@@ -434,7 +434,36 @@ export interface NotificationMessage {
 
 }
 
+// export interface IndentMessage {
+
+//   senderId: number;
+
+//   senderName: string;
+
+//   receiverId: number;
+
+//   itemName: string;
+
+//   quantity: number;
+
+//   priority: string;
+
+//   timestamp: string;
+
+// }
+// export interface IndentMessage {
+//   senderId: number;
+//   senderName: string;
+//   receiverId: number;
+//   itemName: string;
+//   quantity: number;
+//   priority: string;
+//   timestamp: string;
+//   status: string;
+// }
 export interface IndentMessage {
+
+  indentId: string;
 
   senderId: number;
 
@@ -449,6 +478,8 @@ export interface IndentMessage {
   priority: string;
 
   timestamp: string;
+
+  status: string;
 
 }
 
@@ -653,6 +684,42 @@ export function sendIndent(
 
     destination:
       "/app/sendIndent",
+
+    body: JSON.stringify(
+      indent
+    ),
+
+  });
+
+  
+
+}
+
+export function approveIndent(
+  indent: IndentMessage
+) {
+
+  stompClient?.publish({
+
+    destination:
+      "/app/approveIndent",
+
+    body: JSON.stringify(
+      indent
+    ),
+
+  });
+
+}
+
+export function rejectIndent(
+  indent: IndentMessage
+) {
+
+  stompClient?.publish({
+
+    destination:
+      "/app/rejectIndent",
 
     body: JSON.stringify(
       indent

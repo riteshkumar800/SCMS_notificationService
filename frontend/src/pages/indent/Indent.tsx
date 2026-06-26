@@ -635,9 +635,15 @@ import type {
   OnlineUser,
 } from "../../services/onlineUserService";
 
+// import {
+//   connectNotification,
+//   sendIndent,
+// } from "../../services/notificationService";
 import {
   connectNotification,
   sendIndent,
+  approveIndent,
+  rejectIndent,
 } from "../../services/notificationService";
 
 import type {
@@ -712,21 +718,61 @@ function Indent() {
 
       () => {},
 
-      (indent) => {
+    //   (indent) => {
 
-        setIncomingIndents(
+    //     setIncomingIndents(
 
-          (prev) => [
+    //       (prev) => [
 
-            indent,
+    //         indent,
 
-            ...prev,
+    //         ...prev,
 
-          ]
+    //       ]
 
-        );
+    //     );
 
-      }
+    //   }
+    (indent) => {
+
+  setIncomingIndents(prev => {
+
+    const exists = prev.find(
+
+      i =>
+        i.indentId ===
+        indent.indentId
+
+    );
+
+    if (exists) {
+
+      return prev.map(
+
+        i =>
+
+          i.indentId ===
+          indent.indentId
+
+            ? indent
+
+            : i
+
+      );
+
+    }
+
+    return [
+
+      indent,
+
+      ...prev,
+
+    ];
+
+  });
+
+}
 
     );
 
@@ -760,34 +806,26 @@ function Indent() {
 
     sendIndent({
 
-        
+  indentId: crypto.randomUUID(),
 
-      senderId:
-        Number(
-          currentUser.id
-        ),
+  senderId: Number(currentUser.id),
 
-      senderName:
-        currentUser.name || "",
+  senderName: currentUser.name || "",
 
-      receiverId:
-        Number(
-          receiverId
-        ),
+  receiverId: Number(receiverId),
 
-      itemName,
+  itemName,
 
-      quantity:
-        Number(
-          quantity
-        ),
+  quantity: Number(quantity),
 
-      priority,
+  priority,
 
-      timestamp:
-  new Date().toLocaleString(),
+  timestamp: new Date().toLocaleString(),
 
-    });
+  status: "Pending",
+
+});
+    
 
     alert(
       "Indent Sent"
@@ -798,6 +836,45 @@ function Indent() {
     setQuantity("");
 
   };
+
+
+  const handleApprove = (
+  indent: IndentMessage
+) => {
+
+  approveIndent(indent);
+
+  setIncomingIndents(prev =>
+    prev.map(i =>
+      i.indentId === indent.indentId
+        ? {
+            ...i,
+            status: "Approved",
+          }
+        : i
+    )
+  );
+
+};
+
+const handleReject = (
+  indent: IndentMessage
+) => {
+
+  rejectIndent(indent);
+
+  setIncomingIndents(prev =>
+    prev.map(i =>
+      i.indentId === indent.indentId
+        ? {
+            ...i,
+            status: "Rejected",
+          }
+        : i
+    )
+  );
+
+};
 
   return (
 
@@ -1153,7 +1230,7 @@ function Indent() {
 
                   <div
 
-                    key={index}
+                    key={indent.indentId}
 
                     className="bg-[#1f2937] rounded p-4 border-l-4 border-green-500 mb-3"
 
@@ -1183,9 +1260,176 @@ function Indent() {
 
                     </p>
 
-                    <p>
+                    {/* <p>
+  Time : {indent.timestamp}
+</p> */}
+
+<p>
   Time : {indent.timestamp}
 </p>
+
+{/* <p
+  className={
+    indent.status === "Approved"
+      ? "text-green-400 font-bold"
+      : indent.status === "Rejected"
+      ? "text-red-400 font-bold"
+      : "text-yellow-400 font-bold"
+  }
+>
+  Status : {indent.status}
+</p>
+
+{
+  indent.status === "Pending" && (
+    <div className="flex gap-3 mt-3">
+
+      <button
+        onClick={() =>
+          handleApprove(indent)
+        }
+        className="bg-green-600 px-4 py-2 rounded"
+      >
+        Accept
+      </button>
+
+      <button
+        onClick={() =>
+          handleReject(indent)
+        }
+        className="bg-red-600 px-4 py-2 rounded"
+      >
+        Reject
+      </button>
+
+    </div>
+  )
+} */}
+
+{/* <p
+  className={
+    indent.status === "Approved"
+      ? "text-green-400"
+      : indent.status === "Rejected"
+      ? "text-red-400"
+      : "text-yellow-400"
+  }
+>
+  Status : {indent.status}
+</p>
+
+<div className="flex gap-3 mt-3">
+
+  <button
+
+    onClick={() => {
+
+      const updated =
+        [...incomingIndents];
+
+      updated[index] = {
+
+        ...updated[index],
+
+        status: "Approved",
+
+      };
+
+      setIncomingIndents(
+        updated
+      );
+
+    }}
+
+    className="
+      bg-green-600
+      hover:bg-green-700
+      px-4
+      py-2
+      rounded
+    "
+
+  >
+
+    Accept
+
+  </button>
+
+  <button
+
+    onClick={() => {
+
+      const updated =
+        [...incomingIndents];
+
+      updated[index] = {
+
+        ...updated[index],
+
+        status: "Rejected",
+
+      };
+
+      setIncomingIndents(
+        updated
+      );
+
+    }}
+
+    className="
+      bg-red-600
+      hover:bg-red-700
+      px-4
+      py-2
+      rounded
+    "
+
+  >
+
+    Reject
+
+  </button>
+
+</div> */}
+<p
+  className={
+    indent.status === "Approved"
+      ? "text-green-400 font-bold"
+      : indent.status === "Rejected"
+      ? "text-red-400 font-bold"
+      : "text-yellow-400 font-bold"
+  }
+>
+  Status : {indent.status}
+</p>
+
+{
+  indent.status === "Pending" && (
+
+    <div className="flex gap-3 mt-3">
+
+      <button
+        onClick={() =>
+          handleApprove(indent)
+        }
+        className="bg-green-600 px-4 py-2 rounded"
+      >
+        Accept
+      </button>
+
+      <button
+        onClick={() =>
+          handleReject(indent)
+        }
+        className="bg-red-600 px-4 py-2 rounded"
+      >
+        Reject
+      </button>
+
+    </div>
+
+  )
+}
 
                   </div>
 
