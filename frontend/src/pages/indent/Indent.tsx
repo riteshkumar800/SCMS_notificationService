@@ -747,7 +747,19 @@ function Indent() {
     //     );
 
     //   }
-    (indent) => {
+//     (indent) => {
+
+//   setIncomingIndents(prev => {
+(indent) => {
+
+  localStorage.setItem(
+    "newIndentNotification",
+    "true"
+  );
+
+  window.dispatchEvent(
+    new Event("indent-received")
+  );
 
   setIncomingIndents(prev => {
 
@@ -797,6 +809,19 @@ function Indent() {
     };
 
   }, []);
+
+
+  useEffect(() => {
+
+  localStorage.removeItem(
+    "newIndentNotification"
+  );
+
+  window.dispatchEvent(
+    new Event("indent-cleared")
+  );
+
+}, []);
 
   const handleSendIndent = () => {
 

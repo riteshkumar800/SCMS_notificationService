@@ -528,23 +528,38 @@ export function connectNotification(
 
       // Notification Subscribe
 
+      // stompClient?.subscribe(
+
+      //   `/topic/notifications/${userId}`,
+
+      //   (message) => {
+
+      //     onMessage(
+
+      //       JSON.parse(
+      //         message.body
+      //       )
+
+      //     );
+
+      //   }
+
+      // );
       stompClient?.subscribe(
+  `/topic/notifications/${userId}`,
+  (message) => {
 
-        `/topic/notifications/${userId}`,
+    console.log(
+      "NOTIFICATION RECEIVED:",
+      message.body
+    );
 
-        (message) => {
+    onMessage(
+      JSON.parse(message.body)
+    );
 
-          onMessage(
-
-            JSON.parse(
-              message.body
-            )
-
-          );
-
-        }
-
-      );
+  }
+);
 
       // Indent Subscribe
 
